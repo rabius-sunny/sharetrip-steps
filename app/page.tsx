@@ -1,113 +1,140 @@
-import Image from "next/image";
+import fakeFlightData from '@/assets/fakeFlightData'
+import Image from 'next/image'
+import activeLocation from '@/assets/icons/locationactive.svg'
+import deactiveLocation from '@/assets/icons/location.svg'
+import airlineLogo from '@/assets/icons/airlineicon.svg'
+import warningIcon from '@/assets/icons/info.svg'
+import StepLine from '@/components/StepLine'
+import BreadCumbs from '@/components/BreadCumbs'
 
-export default function Home() {
+export default function Index() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className='mt-1'>
+      <BreadCumbs />
+      <div className='mt-5 bg-white rounded-lg shadow-lg py-6'>
+        <div className='pl-6 pr-4 pb-4'>
+          <div className='flex-between w-full'>
+            <div className='flex-center gap-4'>
+              <div className='flex-center justify-center text-white rounded-full size-6 bg-primary'>
+                1
+              </div>
+              <div>
+                <h2 className='font-medium text-lg text-heading'>DAC → JFK</h2>
+                <p className='text-block text-sm font-light'>
+                  Round Trip · 25 Mar - 4 Apr 2023 · 1 Stop
+                </p>
+              </div>
+            </div>
+            <div className='bg-[#E8F3FF] text-primary text-xs px-2 py-1 rounded-full'>
+              33h 30m
+            </div>
+          </div>
+        </div>
+        <hr className='border-t border-block/20' />
+        <div className='px-4 py-6'>
+          {fakeFlightData.map((item, idx) => (
+            <div key={idx}>
+              {item.type === 'flightinfo' ? (
+                <div>
+                  <div className='flex-center ml-[5px] pb-2'>
+                    <Image
+                      src={airlineLogo}
+                      alt='airline logo'
+                      height={32}
+                      width={32}
+                    />
+                    <div className='grid grid-cols-3 w-full ml-3'>
+                      <div>
+                        <h2 className='font-medium text-lg'>{item.flight}</h2>
+                        <p className='text-block font-light'>{item.duration}</p>
+                      </div>
+                      <div>
+                        <h2 className='font-medium text-lg'>{item.timeFrom}</h2>
+                        <p className='text-block font-light'>{item.dateFrom}</p>
+                      </div>
+                      <div>
+                        <h2 className='font-medium text-lg'>{item.timeTo}</h2>
+                        <p className='text-block font-light'>{item.dateTo}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`flex-center ${
+                      item.warn ? 'h-[150px]' : 'h-20'
+                    }`}
+                  >
+                    <StepLine />
+                    <div className='w-full ml-3 -mt-4'>
+                      <div className='grid grid-cols-3 w-full pb-2'>
+                        <div>
+                          <h5
+                            className='text-block'
+                            style={{ fontWeight: 420 }}
+                          >
+                            {item.airlineName}
+                          </h5>
+                          <p className='text-block font-light'>
+                            Flight no : {item.flightNo}
+                          </p>
+                        </div>
+                        <div>
+                          <p className='text-block font-light'>
+                            Airbus Industrie {item.airbusSerial}
+                          </p>
+                          <p className='text-block font-light'>
+                            Class :{' '}
+                            <span style={{ fontWeight: 420 }}>
+                              {item.class}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      {item.warn && (
+                        <div className='mt-3 bg-[#ffeedb] w-full flex items-center gap-2 border border-[#ffe1c2] rounded-[6px] py-2 px-3'>
+                          <Image
+                            src={warningIcon}
+                            alt='alert'
+                            width={20}
+                            height={20}
+                          />
+                          <span className='text-xs font-light'>
+                            {item.warn}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className='flex items-center mb-4'>
+                  <Image
+                    src={item.isActive ? activeLocation : deactiveLocation}
+                    alt='location status'
+                    className='ml-2 mr-4'
+                    width={25}
+                    height={25}
+                  />
+                  <div
+                    className={`p-3 rounded-md flex items-center justify-between w-full ${
+                      item.customBg ? `bg-[${item.customBg}]` : 'bg-[#F5F7FA]'
+                    }`}
+                  >
+                    <p className='font-normal text-sm'>{item.info}</p>
+                    <div className='text-sm text-block font-light'>
+                      {item.terminal?.terminalNumber ? (
+                        <span className='font-normal'>
+                          {item.terminal?.terminalNumber}:{' '}
+                        </span>
+                      ) : null}
+                      <span>{item.terminal?.terminalName}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    </div>
+  )
 }
